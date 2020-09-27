@@ -93,7 +93,7 @@ nycsubway_df =
 ```
 
 
-Clean and covert entry variable from character to logical.
+Select and covert entry variable from character to logical.
 ```{r}
 nycsubway_df_clean = 
   select(nycsubway_df, line:entry, vending, ada) %>% 
@@ -101,8 +101,12 @@ nycsubway_df_clean =
          vending = recode(vending, "YES" = "TRUE", "NO" = "FALSE"),
          entry = as.logical(entry),
          vending = as.logical(vending)
-  )
-
-
+         )
 ```
+
+This dataset contains information on the NYC transit data. The dataset contains information related to each subways stations in NYC, including their names, latitude and longitude, routes, each entrance and exit. 
+
+For now, I imported the data from the data file and clean the variable names. I then drop the not as useful data variables and convert entry and vending variables from character variable to logical variable. 
+
+After cleaning, there are a total of `r nrow(nycsubway_df_clean)` rows and `r ncol(nycsubway_df_clean)` columns in our final dataset. 
 
