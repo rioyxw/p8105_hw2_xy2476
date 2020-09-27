@@ -81,3 +81,14 @@ The total preciptitation in 2018 was `r precip_df %>% filter(year == 2018) %>% p
 
 
 
+## Problem 2
+
+Read the NYC subway station dataset.
+
+```{r}
+nycsubway_df = 
+  read_csv(
+    "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
+  janitor::clean_names() 
+```
+
