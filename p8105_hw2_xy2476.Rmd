@@ -104,9 +104,19 @@ nycsubway_df_clean =
          )
 ```
 
+
 This dataset contains information on the NYC transit data. The dataset contains information related to each subways stations in NYC, including their names, latitude and longitude, routes, each entrance and exit. 
 
 For now, I imported the data from the data file and clean the variable names. I then drop the not as useful data variables and convert entry and vending variables from character variable to logical variable. 
 
-After cleaning, there are a total of `r nrow(nycsubway_df_clean)` rows and `r ncol(nycsubway_df_clean)` columns in our final dataset. 
+After cleaning, there are a total of `r nrow(nycsubway_df_clean)` rows and `r ncol(nycsubway_df_clean)` columns in our final dataset. The data right now is still not so tidy.
+
+How many distinct stations are there?
+
+```{r}
+nycsubway_df_clean = 
+  distinct(nycsubway_df_clean, station_name, .keep_all = TRUE)
+```
+
+Reformat route number and route name to be distinct variables.
 
