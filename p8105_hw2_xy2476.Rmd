@@ -161,3 +161,37 @@ count(filter(nycsubway_tidy_data, route_name == "A"))
 count(filter(nycsubway_tidy_data, route_name == "A" & ada == "TRUE"))
 ```
 
+
+
+## Problem 3
+
+Load and clean data in pols-month.csv
+Use separate() to break up the variable mon into integer variables year, month, and day; replace month number with month name; create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable.
+
+```{r}
+pols_df = 
+  read_csv(
+    "./data/fivethirtyeight_datasets/pols-month.csv") %>% 
+  janitor::clean_names() %>%
+  separate(mon, into = c("year", "month", "day")) %>%
+   mutate(year = as.integer(year),
+          month = as.integer(month),
+          day = as.integer(day)
+          )
+
+pols_month_df = 
+  tibble(
+    month = 1:12,
+    month_name = month.name
+  )
+
+pols_df = 
+  left_join(pols_df, pols_month_df, by = "month") %>% 
+  mutate(
+    month = month_name) %>% 
+  select(year:rep_dem)
+
+```
+
+
+
