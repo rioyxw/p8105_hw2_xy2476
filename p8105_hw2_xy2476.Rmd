@@ -133,4 +133,25 @@ count(filter(nycsubway_df_clean, vending == "FALSE" & entry == "TRUE"))/count(fi
 
 
 Reformat route number and route name to be distinct variables.
+First convert route8-11 from num to character variables.
+
+```{r}
+nycsubway_df_clean = 
+  nycsubway_df_clean %>% 
+  mutate(route8 = as.character(route8),
+         route9 = as.character(route9),
+         route10 = as.character(route10),
+         route11 = as.character(route11)
+         )
+       
+nycsubway_tidy_data = 
+  pivot_longer(
+    nycsubway_df_clean,
+    route1:route11,
+    names_to = "route_number",
+    values_to = "route_name"
+    )
+
+str(nycsubway_df_clean)
+```
 
