@@ -151,7 +151,13 @@ nycsubway_tidy_data =
     names_to = "route_number",
     values_to = "route_name"
     )
+```
 
-str(nycsubway_df_clean)
+How many distinct stations serve the A train? Of the stations that serve the A train, how many are ADA compliant?
+
+```{r}
+count(filter(nycsubway_tidy_data, route_name == "A"))
+
+count(filter(nycsubway_tidy_data, route_name == "A" & ada == "TRUE"))
 ```
 
