@@ -125,7 +125,11 @@ count(filter(nycsubway_df_clean, ada == "TRUE"))
 ```
 
 
+What proportion of station entrances / exits without vending allow entrance?
 
+```{r}
+count(filter(nycsubway_df_clean, vending == "FALSE" & entry == "TRUE"))/count(filter(nycsubway_df_clean, vending == "FALSE"))
+```
 
 
 Reformat route number and route name to be distinct variables.
