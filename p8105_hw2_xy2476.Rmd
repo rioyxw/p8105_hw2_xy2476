@@ -134,6 +134,7 @@ count(filter(nycsubway_df_clean_distinct, vending == "FALSE"))
 # the number of stations entrances / exits that allow entrance but do not have vending
 count(filter(nycsubway_df_clean_distinct, vending == "FALSE" & entry == "TRUE"))
 
+count(filter(nycsubway_df_clean_distinct, vending == "FALSE" & entry == "TRUE"))/count(filter(nycsubway_df_clean_distinct, vending == "FALSE"))
 count(filter(nycsubway_df_clean_distinct, vending == "FALSE"))/count(filter(nycsubway_df_clean_distinct, vending == "FALSE" & entry == "TRUE"))
 ```
 
@@ -201,12 +202,12 @@ pols_df =
 create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable.
 
 ```{r}
-#pols_df = 
-  #mutate(president = 
-          # case_when(
-             #prez_dem == 1 ~ "dem",
-             #prez_gop == 1 ~ "gop")) %>% 
-        # select(-day, -prez_dem, -prez_gop)
+pols_df = 
+  mutate(pols_df, president = 
+           case_when(
+             prez_dem == 1 ~ "dem",
+             prez_gop == 1 ~ "gop")) %>% 
+         select(-day, -prez_dem, -prez_gop)
 ```
 
 Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that year and month are the leading columns.
@@ -225,7 +226,7 @@ snp_df =
   relocate(year, month) %>% 
   left_join(pols_month_df, by = "month") %>% 
   mutate(month = month_name) %>% 
-  select(year:close)
+  select(year:close, -day)
 ```
 do we need to drop day????
 
@@ -249,5 +250,12 @@ str(pols_df)
 str(snp_df)
 ```
 
+Join the three datasets.
+
+```{r}
+final_data = 
+  left_join(pols_df, snp_df) %>% 
+  left_join(unemploy_df)
+```
 
 
