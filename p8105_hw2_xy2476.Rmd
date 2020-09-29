@@ -222,9 +222,32 @@ snp_df =
           year = as.integer(year)
           ) %>% 
   arrange(year, month) %>% 
-  relocate(year, month)
+  relocate(year, month) %>% 
+  left_join(pols_month_df, by = "month") %>% 
+  mutate(month = month_name) %>% 
+  select(year:close)
 ```
 do we need to drop day????
+
+Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
+
+```{r}
+unemploy_df = 
+  read_csv(
+    "./data/fivethirtyeight_datasets/unemployment.csv") %>% 
+  janitor::clean_names() %>%
+  select(year, january = jan, february = feb, march = mar, april = apr, may = may, june = jun, july = jul, august = aug, september = sep, october = oct, november = nov, december = dec) %>% 
+  pivot_longer(
+    january:december,
+    names_to = "month",
+    values_to = "unemploy_percent") %>% 
+  mutate(month = as.character(month),
+         year = as.integer(year))
+
+
+str(pols_df)
+str(snp_df)
+```
 
 
 
