@@ -97,10 +97,8 @@ Select and covert entry variable from character to logical.
 ```{r}
 nycsubway_df_clean = 
   select(nycsubway_df, line:entry, vending, ada) %>% 
-  mutate(entry = recode(entry, "YES" = "TRUE", "NO" = "FALSE"),
-         vending = recode(vending, "YES" = "TRUE", "NO" = "FALSE"),
-         entry = as.logical(entry),
-         vending = as.logical(vending)
+  mutate(entry = recode(entry, "YES" = TRUE, "NO" = FALSE),
+         vending = recode(vending, "YES" = TRUE, "NO" = FALSE)
          )
 ```
 
@@ -114,21 +112,29 @@ After cleaning, there are a total of `r nrow(nycsubway_df_clean)` rows and `r nc
 How many distinct stations are there?
 
 ```{r}
-nycsubway_df_clean = 
-  distinct(nycsubway_df_clean, line, station_name, .keep_all = TRUE)
+nycsubway_df_clean_distinct = 
+  distinct(nycsubway_df_clean, line, station_name, .keep_all = TRUE) 
 ```
+There are `r nrow(nycsubway_df_clean_distinct)` distinct stations.
+
 
 How many stations are ADA compliant?
 
 ```{r}
-count(filter(nycsubway_df_clean, ada == "TRUE"))
+count(filter(nycsubway_df_clean_distinct, ada == "TRUE"))
 ```
 
 
 What proportion of station entrances / exits without vending allow entrance?
+This question is asking that among all the stations entrances / exits which do not have vending, what proportion allow entrance. To be more clear, you will need to firstly calculate the number of stations entrances / exits that do not have vending. Then, calculate the number of stations entrances / exits that allow entrance but do not have vending.0.3874
 
 ```{r}
-count(filter(nycsubway_df_clean, vending == "FALSE" & entry == "TRUE"))/count(filter(nycsubway_df_clean, vending == "FALSE"))
+count(filter(nycsubway_df_clean_distinct, vending == "FALSE"))
+      
+# the number of stations entrances / exits that allow entrance but do not have vending
+count(filter(nycsubway_df_clean_distinct, vending == "FALSE" & entry == "TRUE"))
+
+count(filter(nycsubway_df_clean_distinct, vending == "FALSE"))/count(filter(nycsubway_df_clean_distinct, vending == "FALSE" & entry == "TRUE"))
 ```
 
 
@@ -136,8 +142,8 @@ Reformat route number and route name to be distinct variables.
 First convert route8-11 from num to character variables.
 
 ```{r}
-nycsubway_df_clean = 
-  nycsubway_df_clean %>% 
+nycsubway_df_clean_route = 
+  nycsubway_df_clean_distinct %>% 
   mutate(route8 = as.character(route8),
          route9 = as.character(route9),
          route10 = as.character(route10),
@@ -146,7 +152,7 @@ nycsubway_df_clean =
        
 nycsubway_tidy_data = 
   pivot_longer(
-    nycsubway_df_clean,
+    nycsubway_df_clean_route,
     route1:route11,
     names_to = "route_number",
     values_to = "route_name"
@@ -193,5 +199,10 @@ pols_df =
 
 ```
 
+create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable.
+
+```{r}
+
+```
 
 
