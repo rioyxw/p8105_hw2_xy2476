@@ -264,15 +264,15 @@ final_data =
 
 str(final_data)
 ```
-Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
 
 There are three datasets combined in the final dataset: pols_df, snp_df, and unemploy_df. 
-The file “pols-month” contains 822 observations of 9 variables originally related to the number of national politicians who are democratic or republican at any given time. After cleaning the data, the cleaned pols_df has `r nrow(pols_df)` rows and `r ncol(pols_df)` columns. Important variables in the dataset include year, month, president,  The year range in pols_df ranges from 1947 to 2015. 
-the number of republican governors on the associated date
-sen_gop: the number of republican senators on the associated date
-rep_gop: the number of republican representatives on the associated date
-prez_dem: indicator of whether the president was democratic on the associated date (1 = yes, 0 = no)
-gov_dem: the number of democratic governors on the associated date
-sen_dem: the number of democratic senators on the associated date
-rep_dem: the number of democratic representatives on the associated date
+The first file “pols-month” contains 822 observations of 9 variables originally related to the number of national politicians who are democratic or republican at any given time. After cleaning the data, the cleaned pols_df has `r nrow(pols_df)` rows and `r ncol(pols_df)` columns. Important variables in the dataset include year, month, president, and number of different parties on the associated dates. President variable indicates whether the president was democratic or republican. The year range in pols_df ranges from 1947 to 2015. The year range is the largest among all three data, so when merging the datasets, 1947 - 1948 have some NA values. 
+
+The second snp.csv data sets contains 787 observations of 2 variables related to Standard & Poor’s stock market index (S&P), often used as a representative measure of stock market as a whole. After cleaning, the cleaned snp_df has `r nrow(snp_df)` rows and `r ncol(snp_df)` columns because I separated the date variable into year and month. The close variable represents the closing values of the S&P stock index on the associated date.The range of the year starts from 1950 to 2015. 
+
+The third unemployment dataset contains 68 observations of 13 variables, containing year and month variables to document percentage of unemployment on the associated dates. After cleaning, the cleaned unemploy_df contains `r nrow(unemploy_df)` rows and `r ncol(unemploy_df)` columns because I combined all months variables into one variable "month" using pivot_longer while putting the unemployment percentages into the "unemployment" column. The year ranges from 1948 to 2015. 
+
+The final_df is created by joining all three datasets by year and month. The final_df contains`r nrow(final_data)` rows and `r ncol(final_data)` columns. The year ranges from 1947 to 2015. 
+
+
 
