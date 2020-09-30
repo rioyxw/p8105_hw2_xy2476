@@ -103,11 +103,14 @@ nycsubway_df_clean =
 ```
 
 
-This dataset contains information on the NYC transit data. The dataset contains information related to each subways stations in NYC, including their names, latitude and longitude, routes, each entrance and exit. 
+This dataset contains information on the NYC transit data. The dataset contains information related to each subways stations in NYC, including their names, latitude and longitude, routes, each entrance and exit, and vending.
 
-For now, I imported the data from the data file and clean the variable names. I then drop the not as useful data variables and convert entry and vending variables from character variable to logical variable. 
+For now, I loaded the data from the data file and clean the variable names. I then dropped the not as useful data variables and converted entry and vending variables from character variable to logical variable. 
 
-After cleaning, there are a total of `r nrow(nycsubway_df_clean)` rows and `r ncol(nycsubway_df_clean)` columns in our final dataset. The data right now is still not so tidy.
+After cleaning, there are a total of `r nrow(nycsubway_df_clean)` rows and `r ncol(nycsubway_df_clean)` columns in our cleaned dataset. The data right now is still not so tidy.
+
+
+#### Answer questions about dataset:
 
 How many distinct stations are there?
 
@@ -115,7 +118,7 @@ How many distinct stations are there?
 nycsubway_df_clean_distinct = 
   distinct(nycsubway_df_clean, line, station_name, .keep_all = TRUE) 
 ```
-There are `r nrow(nycsubway_df_clean_distinct)` distinct stations.
+##### There are `r nrow(nycsubway_df_clean_distinct)` distinct stations.
 
 
 How many stations are ADA compliant?
@@ -123,24 +126,25 @@ How many stations are ADA compliant?
 ```{r}
 count(filter(nycsubway_df_clean_distinct, ada == "TRUE"))
 ```
+##### There are `r count(filter(nycsubway_df_clean_distinct, ada == "TRUE"))` distinct stations.
 
 
 What proportion of station entrances / exits without vending allow entrance?
-This question is asking that among all the stations entrances / exits which do not have vending, what proportion allow entrance. To be more clear, you will need to firstly calculate the number of stations entrances / exits that do not have vending. Then, calculate the number of stations entrances / exits that allow entrance but do not have vending.0.3874
 
 ```{r}
-count(filter(nycsubway_df_clean_distinct, vending == "FALSE"))
+# the number of stations entrances / exits that do not have vending
+no_vending = count(filter(nycsubway_df_clean, vending == "FALSE"))
       
 # the number of stations entrances / exits that allow entrance but do not have vending
-count(filter(nycsubway_df_clean_distinct, vending == "FALSE" & entry == "TRUE"))
+entry_no_vending = count(filter(nycsubway_df_clean, vending == "FALSE" & entry == "TRUE"))
 
-count(filter(nycsubway_df_clean_distinct, vending == "FALSE" & entry == "TRUE"))/count(filter(nycsubway_df_clean_distinct, vending == "FALSE"))
-count(filter(nycsubway_df_clean_distinct, vending == "FALSE"))/count(filter(nycsubway_df_clean_distinct, vending == "FALSE" & entry == "TRUE"))
+percentage = entry_no_vending / no_vending
 ```
+##### The proportion is `r percentage`
 
 
-Reformat route number and route name to be distinct variables.
-First convert route8-11 from num to character variables.
+#Reformat route number and route name to be distinct variables.
+#First convert route8-11 from num to character variables. which dataset do we use? distinct or no
 
 ```{r}
 nycsubway_df_clean_route = 
@@ -167,6 +171,7 @@ count(filter(nycsubway_tidy_data, route_name == "A"))
 
 count(filter(nycsubway_tidy_data, route_name == "A" & ada == "TRUE"))
 ```
+##### There are `r count(filter(nycsubway_tidy_data, route_name == "A"))` served A train. There are `r count(filter(nycsubway_tidy_data, route_name == "A" & ada == "TRUE"))` stations served A train and are ADA compliant. 
 
 
 
@@ -210,7 +215,7 @@ pols_df =
          select(-day, -prez_dem, -prez_gop)
 ```
 
-Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that year and month are the leading columns.
+Load and clean data in snp.csv. 
 
 ```{r}
 snp_df = 
@@ -220,8 +225,7 @@ snp_df =
   separate(date, into = c("month", "day", "year")) %>%
    mutate(month = as.integer(month),
           day = as.integer(day),
-          year = as.integer(year)
-          ) %>% 
+          year = as.integer(year)) %>% 
   arrange(year, month) %>% 
   relocate(year, month) %>% 
   left_join(pols_month_df, by = "month") %>% 
@@ -248,14 +252,15 @@ unemploy_df =
 
 str(pols_df)
 str(snp_df)
+str(unemploy_df)
 ```
 
 Join the three datasets.
 
 ```{r}
 final_data = 
-  left_join(pols_df, snp_df) %>% 
-  left_join(unemploy_df)
+  left_join(pols_df, snp_df, by = c("year", "month")) %>% 
+  left_join(unemploy_df, by = c("year", "month"))
 ```
 
 
