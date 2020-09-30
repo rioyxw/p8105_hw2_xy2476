@@ -241,9 +241,9 @@ unemploy_df =
   read_csv(
     "./data/fivethirtyeight_datasets/unemployment.csv") %>% 
   janitor::clean_names() %>%
-  select(year, january = jan, february = feb, march = mar, april = apr, may = may, june = jun, july = jul, august = aug, september = sep, october = oct, november = nov, december = dec) %>% 
+  select(year, January = jan, February = feb, March = mar, April = apr, May = may, June = jun, July = jul, August = aug, September = sep, October = oct, November = nov, December = dec) %>% 
   pivot_longer(
-    january:december,
+    January:December,
     names_to = "month",
     values_to = "unemploy_percent") %>% 
   mutate(month = as.character(month),
@@ -261,6 +261,18 @@ Join the three datasets.
 final_data = 
   left_join(pols_df, snp_df, by = c("year", "month")) %>% 
   left_join(unemploy_df, by = c("year", "month"))
-```
 
+str(final_data)
+```
+Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
+
+There are three datasets combined in the final dataset: pols_df, snp_df, and unemploy_df. 
+The file “pols-month” contains 822 observations of 9 variables originally related to the number of national politicians who are democratic or republican at any given time. After cleaning the data, the cleaned pols_df has `r nrow(pols_df)` rows and `r ncol(pols_df)` columns. Important variables in the dataset include year, month, president,  The year range in pols_df ranges from 1947 to 2015. 
+the number of republican governors on the associated date
+sen_gop: the number of republican senators on the associated date
+rep_gop: the number of republican representatives on the associated date
+prez_dem: indicator of whether the president was democratic on the associated date (1 = yes, 0 = no)
+gov_dem: the number of democratic governors on the associated date
+sen_dem: the number of democratic senators on the associated date
+rep_dem: the number of democratic representatives on the associated date
 
