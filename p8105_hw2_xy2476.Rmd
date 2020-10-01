@@ -93,7 +93,7 @@ nycsubway_df =
 ```
 
 
-Select and covert entry variable from character to logical.
+Select and covert entry variable from character to logical. change vending to make it easier for the proportion question.
 ```{r}
 nycsubway_df_clean = 
   select(nycsubway_df, line:entry, vending, ada) %>% 
@@ -125,8 +125,9 @@ How many stations are ADA compliant?
 
 ```{r}
 count(filter(nycsubway_df_clean_distinct, ada == "TRUE"))
+count(filter(nycsubway_df_clean, ada == "TRUE"))
 ```
-##### There are `r count(filter(nycsubway_df_clean_distinct, ada == "TRUE"))` distinct stations.
+##### There are `r count(filter(nycsubway_df_clean_distinct, ada == "TRUE"))` distinct stations in the distinct station dataframe. There are `r count(filter(nycsubway_df_clean, ada == "TRUE"))` distinct stations in the origianl dataframe.
 
 
 What proportion of station entrances / exits without vending allow entrance?
@@ -143,12 +144,12 @@ percentage = entry_no_vending / no_vending
 ##### The proportion is `r percentage`
 
 
-#Reformat route number and route name to be distinct variables.
-#First convert route8-11 from num to character variables. which dataset do we use? distinct or no
+Reformat route number and route name to be distinct variables.
+First convert route8-11 from num to character variables
 
 ```{r}
 nycsubway_df_clean_route = 
-  nycsubway_df_clean_distinct %>% 
+  nycsubway_df_clean %>% 
   mutate(route8 = as.character(route8),
          route9 = as.character(route9),
          route10 = as.character(route10),
@@ -167,12 +168,23 @@ nycsubway_tidy_data =
 How many distinct stations serve the A train? Of the stations that serve the A train, how many are ADA compliant?
 
 ```{r}
-count(filter(nycsubway_tidy_data, route_name == "A"))
+distinct_a =
+  filter(nycsubway_tidy_data, route_name == "A") %>% 
+  distinct(line, station_name, .keep_all = TRUE) %>% 
+  count()
+  
+distinct_a_ada = 
+  filter(nycsubway_tidy_data, route_name == "A") %>% 
+  distinct(line, station_name, .keep_all = TRUE) %>% 
+  filter(ada == "TRUE") %>% 
+  count()
 
-count(filter(nycsubway_tidy_data, route_name == "A" & ada == "TRUE"))
+a_ada =
+  filter(nycsubway_tidy_data, route_name == "A") %>% 
+  filter(ada == "TRUE") %>% 
+  count()
 ```
-##### There are `r count(filter(nycsubway_tidy_data, route_name == "A"))` served A train. There are `r count(filter(nycsubway_tidy_data, route_name == "A" & ada == "TRUE"))` stations served A train and are ADA compliant. 
-
+##### There are `r distinct_a` distinct stations that serve A train. There are `r distinct_a_ada` distinct stations serve A train and are ADA compliant. Additionally, there are `r a_ada` (not distinct) stations serve A train and are ADA compliant.
 
 
 ## Problem 3
@@ -231,7 +243,7 @@ snp_df =
   mutate(month = month_name) %>% 
   select(year:close, -day)
 ```
-##do we need to drop day????
+
 
 Tidy the unemployment data so that it can be merged with the previous datasets.
 
@@ -258,6 +270,8 @@ final_data =
 
 str(final_data)
 ```
+
+Description: 
 
 There are three datasets combined in the final dataset: pols_df, snp_df, and unemploy_df. 
 The first file “pols-month” contains 822 observations of 9 variables originally related to the number of national politicians who are democratic or republican at any given time. After cleaning the data, the cleaned pols_df has `r nrow(pols_df)` rows and `r ncol(pols_df)` columns. Important variables in the dataset include year, month, president, and number of different parties representatives on the associated dates. President variable indicates whether the president was democratic or republican. The year range in pols_df ranges from 1947 to 2015. The year range is the largest among all three data, so when merging the datasets, 1947 - 1948 have some NA values. 
