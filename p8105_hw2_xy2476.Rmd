@@ -127,7 +127,7 @@ How many stations are ADA compliant?
 count(filter(nycsubway_df_clean_distinct, ada == "TRUE"))
 count(filter(nycsubway_df_clean, ada == "TRUE"))
 ```
-##### There are `r count(filter(nycsubway_df_clean_distinct, ada == "TRUE"))` distinct stations in the distinct station dataframe. There are `r count(filter(nycsubway_df_clean, ada == "TRUE"))` distinct stations in the origianl dataframe.
+##### There are `r count(filter(nycsubway_df_clean_distinct, ada == "TRUE"))` stations in the distinct station dataframe that are ADA compliant. There are `r count(filter(nycsubway_df_clean, ada == "TRUE"))` stations in the origianl dataframe that are ADA compliant.
 
 
 What proportion of station entrances / exits without vending allow entrance?
